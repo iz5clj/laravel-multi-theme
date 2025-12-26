@@ -1,0 +1,44 @@
+{
+    "name": "iz5clj/laravel-multi-theme",
+    "description": "A Laravel package for managing multiple themes (frontend, admin, etc.)",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "theme", "multi-theme", "frontend", "admin"],
+    "authors": [
+        {
+            "name": "Michel Sabatino",
+            "email": "ms@auxe.net"
+        }
+    ],
+    "require": {
+        "php": "^8.1|^8.2|^8.3|^8.4",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/view": "^10.0|^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0",
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "iz5clj\\MultiTheme\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "iz5clj\\MultiTheme\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "iz5clj\\MultiTheme\\MultiThemeServiceProvider"
+            ],
+            "aliases": {
+                "Theme": "iz5clj\\MultiTheme\\Facades\\Theme"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
