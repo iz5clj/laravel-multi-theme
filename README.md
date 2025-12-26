@@ -174,19 +174,15 @@ Use in views:
 <img src="{{ theme_asset('images/logo.png') }}" alt="Logo">
 ```
 
-## License
-
-MIT License
-
 ## Contributing
 
 Pull requests are welcome!
 
-### 9. LICENSE
+## LICENSE
 
 MIT License
 
-Copyright (c) 2024 Your Name
+Copyright (c) 2025 IZ5CLJ - Michel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
