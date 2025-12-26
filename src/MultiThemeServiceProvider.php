@@ -16,7 +16,7 @@ class MultiThemeServiceProvider extends ServiceProvider
     {
         // Merge config
         $this->mergeConfigFrom(
-            __DIR__.'/config/multi-theme.php', 'multi-theme'
+            __DIR__.'/../config/multi-theme.php', 'multi-theme'
         );
 
         // Register theme service as singleton
@@ -32,7 +32,7 @@ class MultiThemeServiceProvider extends ServiceProvider
     {
         // Publish config
         $this->publishes([
-            __DIR__.'/config/multi-theme.php' => config_path('multi-theme.php'),
+            __DIR__.'/../config/multi-theme.php' => config_path('multi-theme.php'),
         ], 'multi-theme-config');
 
         // Register commands
