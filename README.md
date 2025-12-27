@@ -1,203 +1,166 @@
-# Laravel Multi-Theme Package
+# Laravel Theme
 
-A Laravel package for managing multiple themes in your application. Perfect for applications that need separate frontend and admin themes, or multiple theme variations.
-
-## Features
-
-- ✅ Multiple theme types (frontend, admin, custom)
-- ✅ Easy theme switching via command or facade
-- ✅ Automatic view resolution with fallback support
-- ✅ Theme-specific components
-- ✅ Middleware for route-based theme assignment
-- ✅ Laravel 10, 11, 12 compatible
+A Laravel package for multi-theme support with dynamic view path switching.
 
 ## Installation
 
-Install via Composer:
+### Via Composer (from Packagist after publishing)
 
 ```bash
-composer require iz5clj/laravel-multi-theme
+composer require michel/laravel-theme
 ```
 
-Publish the config file:
+### Local Development
+
+Add the package to your `composer.json`:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/michel/laravel-theme"
+        }
+    ],
+    "require": {
+        "michel/laravel-theme": "*"
+    }
+}
+```
+
+Then run:
 
 ```bash
-php artisan vendor:publish --tag=multi-theme-config
-```
-
-## Directory Structure
-
-Create your themes directory:
-
-```
-resources/
-└── themes/
-    ├── frontend/
-    │   ├── default/
-    │   │   ├── views/
-    │   │   ├── sass/
-    │   │   └── js/
-    │   └── modern/
-    │       └── views/
-    └── admin/
-        ├── classic/
-        │   └── views/
-        └── dashboard/
-            └── views/
+composer update michel/laravel-theme
 ```
 
 ## Configuration
 
-Edit `config/multi-theme.php`:
+Publish the configuration file:
 
-```php
-'types' => [
-    'frontend' => [
-        'active' => env('FRONTEND_THEME', 'default'),
-        'path' => 'frontend',
-        'themes' => [
-            'default' => ['name' => 'Default Theme'],
-            'modern' => ['name' => 'Modern Theme'],
-        ],
-    ],
-    'admin' => [
-        'active' => env('ADMIN_THEME', 'classic'),
-        'path' => 'admin',
-        'themes' => [
-            'classic' => ['name' => 'Classic Admin'],
-            'dashboard' => ['name' => 'Dashboard Theme'],
-        ],
-    ],
-],
+```bash
+php artisan vendor:publish --tag=theme-config
 ```
 
-Add to your `.env`:
+This will create a `config/theme.php` file where you can set:
 
-```env
-FRONTEND_THEME=default
-ADMIN_THEME=classic
+- `default` - The default theme name
+- `path` - The base path where themes are located
+
+## Theme Structure
+
+Create your themes in the configured path (default: `resources/themes`):
+
+```
+resources/themes/
+├── my-theme/
+│   └── views/
+│       ├── welcome.blade.php
+│       └── layouts/
+│           └── app.blade.php
+└── another-theme/
+    └── views/
+        └── welcome.blade.php
 ```
 
 ## Usage
 
-### Route Middleware
+### Via Middleware (Recommended)
+
+Apply the `theme` middleware to routes or route groups:
 
 ```php
-// routes/web.php
+// Single route
+Route::get('/', function () {
+    return view('welcome');
+})->middleware('theme:my-theme');
 
-// Frontend routes
-Route::middleware(['theme:frontend'])->group(function () {
-    Route::get('/', [HomeController::class, 'index']);
-    Route::get('/about', [HomeController::class, 'about']);
-});
-
-// Admin routes
-Route::prefix('admin')
-    ->middleware(['auth', 'theme:admin'])
-    ->group(function () {
-        Route::get('/', [DashboardController::class, 'index']);
+// Route group
+Route::middleware(['theme:my-theme'])->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
     });
+    
+    Route::get('/about', function () {
+        return view('about');
+    });
+});
 ```
 
-### Using the Facade
+### Via Facade
 
 ```php
-use iz5clj\MultiTheme\Facades\Theme;
+use Michel\LaravelTheme\Facades\Theme;
 
-// Get current theme type
-Theme::getType(); // 'frontend' or 'admin'
+// Set the theme
+Theme::set('my-theme');
 
-// Get active theme for a type
-Theme::getActive('frontend'); // 'default'
+// Get current theme name
+$currentTheme = Theme::get();
 
-// Get theme path
-Theme::getPath('frontend'); // Full path to views
+// Get theme asset URL
+$cssUrl = Theme::asset('css/app.css');
+// Returns: /themes/my-theme/css/app.css
 
-// Get theme asset path
-Theme::asset('images/logo.png'); // 'themes/frontend/default/images/logo.png'
-
-// Get available themes
-Theme::getAvailableThemes('frontend');
-
-// Check if theme exists
-Theme::themeExists('frontend', 'modern');
-```
-
-### Controllers
-
-Controllers work normally - Laravel automatically resolves views from the active theme:
-
-```php
-class HomeController extends Controller
-{
-    public function index()
-    {
-        // Looks in: resources/themes/frontend/{active}/views/pages/home.blade.php
-        return view('pages.home');
-    }
+// Check if a theme exists
+if (Theme::exists('my-theme')) {
+    // ...
 }
+
+// Get all available themes
+$themes = Theme::all();
 ```
 
-### Artisan Command
+### In Blade Templates
 
-Switch themes via command line:
-
-```bash
-# Switch frontend theme to 'modern'
-php artisan theme:switch frontend modern
-
-# Switch admin theme to 'dashboard'
-php artisan theme:switch admin dashboard
-
-# Clear config cache
-php artisan config:clear
-```
-
-### Helper Function (Optional)
-
-Create a helper in your app:
-
-```php
-// app/helpers.php
-
-if (!function_exists('theme_asset')) {
-    function theme_asset(string $path): string
-    {
-        return app('theme')->asset($path);
-    }
-}
-```
-
-Use in views:
+The current theme name is shared with all views as `$currentTheme`:
 
 ```blade
-<img src="{{ theme_asset('images/logo.png') }}" alt="Logo">
+<link href="{{ asset('themes/' . $currentTheme . '/css/app.css') }}" rel="stylesheet">
+
+{{-- Or using the Theme facade --}}
+<link href="{{ Theme::asset('css/app.css') }}" rel="stylesheet">
 ```
 
-## Contributing
+### Theme Assets
 
-Pull requests are welcome!
+Place your theme assets in the public directory:
 
-## LICENSE
+```
+public/themes/
+├── my-theme/
+│   ├── css/
+│   │   └── app.css
+│   ├── js/
+│   │   └── app.js
+│   └── images/
+│       └── logo.png
+└── another-theme/
+    └── css/
+        └── app.css
+```
+
+## API Reference
+
+### ThemeService Methods
+
+| Method | Description |
+|--------|-------------|
+| `set(string $theme)` | Set the active theme |
+| `get()` | Get the current theme name |
+| `asset(string $path)` | Generate URL for theme asset |
+| `exists(string $theme)` | Check if a theme exists |
+| `all()` | Get all available themes |
+| `getThemePath(string $theme = null)` | Get the full path to a theme's views |
+| `getBasePath()` | Get the base themes path |
+| `setBasePath(string $path)` | Set the base themes path |
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `THEME_DEFAULT` | The default theme name | `default` |
+
+## License
 
 MIT License
-
-Copyright (c) 2025 IZ5CLJ - Michel
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
