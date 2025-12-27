@@ -1,6 +1,6 @@
 <?php
 
-namespace Michel\LaravelTheme;
+namespace Iz5clj\LaravelMultiTheme;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;

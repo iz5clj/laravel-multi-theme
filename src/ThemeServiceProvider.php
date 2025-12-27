@@ -1,11 +1,11 @@
 <?php
 
-namespace Michel\LaravelTheme;
+namespace Iz5clj\LaravelMultiTheme;
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use Michel\LaravelTheme\Middleware\SetTheme;
+use Iz5clj\LaravelMultiTheme\Middleware\SetTheme;
 
 class ThemeServiceProvider extends ServiceProvider
 {
@@ -17,10 +17,12 @@ class ThemeServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/theme.php', 'theme');
 
         $this->app->singleton('theme', function ($app) {
-            return new ThemeService(
-                config('theme.default', 'default'),
-                config('theme.path', resource_path('themes'))
-            );
+            /** @var string $default */
+            $default = config('theme.default', 'default') ?? 'default';
+            /** @var string $path */
+            $path = config('theme.path', resource_path('themes')) ?? resource_path('themes');
+            
+            return new ThemeService($default, $path);
         });
     }
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Michel\LaravelTheme\Middleware;
+namespace Iz5clj\LaravelMultiTheme\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Michel\LaravelTheme\ThemeService;
+use Iz5clj\LaravelMultiTheme\ThemeService;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetTheme

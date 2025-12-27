@@ -1,5 +1,5 @@
 {
-    "name": "michel/laravel-theme",
+    "name": "iz5clj/laravel-multi-theme",
     "description": "A Laravel package for multi-theme support with dynamic view path switching",
     "keywords": ["laravel", "theme", "views", "multi-theme"],
     "license": "MIT",
@@ -7,7 +7,7 @@
     "authors": [
         {
             "name": "Michel",
-            "email": "michel@example.com"
+            "email": "ms@auxe.net"
         }
     ],
     "require": {
@@ -17,21 +17,21 @@
     },
     "autoload": {
         "psr-4": {
-            "Michel\\LaravelTheme\\": "src/"
+            "Iz5clj\\LaravelMultiTheme\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Michel\\LaravelTheme\\Tests\\": "tests/"
+            "Iz5clj\\LaravelMultiTheme\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Michel\\LaravelTheme\\ThemeServiceProvider"
+                "Iz5clj\\LaravelMultiTheme\\ThemeServiceProvider"
             ],
             "aliases": {
-                "Theme": "Michel\\LaravelTheme\\Facades\\Theme"
+                "Theme": "Iz5clj\\LaravelMultiTheme\\Facades\\Theme"
             }
         }
     },
