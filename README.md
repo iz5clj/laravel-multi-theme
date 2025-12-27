@@ -7,31 +7,7 @@ A Laravel package for multi-theme support with dynamic view path switching.
 ### Via Composer (from Packagist after publishing)
 
 ```bash
-composer require michel/laravel-theme
-```
-
-### Local Development
-
-Add the package to your `composer.json`:
-
-```json
-{
-    "repositories": [
-        {
-            "type": "path",
-            "url": "packages/michel/laravel-theme"
-        }
-    ],
-    "require": {
-        "michel/laravel-theme": "*"
-    }
-}
-```
-
-Then run:
-
-```bash
-composer update michel/laravel-theme
+composer require iz5clj/laravel-theme
 ```
 
 ## Configuration
